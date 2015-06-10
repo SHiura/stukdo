@@ -5,7 +5,9 @@ class TasksController < ApplicationController
   # GET /tasks
   # GET /tasks.json
   def index
-    @tasks = current_user.tasks
+    @to_do = current_user.tasks.where(state: "to_do")
+    @doing = current_user.tasks.where(state: "doing")
+    @done = current_user.tasks.where(state: "done")
    
   end
 
@@ -18,6 +20,7 @@ class TasksController < ApplicationController
   # GET /tasks/new
   def new
     @task = Task.new
+    
   end
 
   # GET /tasks/1/edit
@@ -28,6 +31,7 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = current_user.tasks.new(task_params)
+    @task.save
     
 
     respond_to do |format|
@@ -73,6 +77,6 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:content)
+      params.require(:task).permit(:content, :state)
     end
 end
